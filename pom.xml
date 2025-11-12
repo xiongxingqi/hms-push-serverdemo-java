@@ -7,6 +7,10 @@
     <groupId>com.huawei.pushplatform</groupId>
     <artifactId>push.java.sample</artifactId>
     <version>1.0</version>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
 
     <dependencies>
         <!-- Utilities -->
@@ -59,10 +63,44 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.5.1</version>
                 <configuration>
-                    <encoding>UTF-8</encoding>
+                    <encoding>${project.build.sourceEncoding}</encoding>
                     <source>1.8</source>
                     <target>1.8</target>
+                    <!-- 添加以下参数，输出详细过时信息 -->
+                    <compilerArgs>
+                        <arg>-Xlint:deprecation</arg> <!-- 显示普通过时API详情 -->
+                        <arg>-Xlint:removal</arg> <!-- 显示待删除过时API详情 -->
+                    </compilerArgs>
                 </configuration>
+            </plugin>
+
+            <!-- 资源插件：处理主资源和测试资源（消除目录不存在提示） -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version> <!-- 与日志中版本一致 -->
+                <configuration>
+                    <!-- 资源文件编码（读取配置文件、静态资源等时避免乱码） -->
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+                <executions>
+                    <!-- 主资源（src/main/resources）：默认已处理，无需额外配置 -->
+                    <execution>
+                        <id>default-resources</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>resources</goal>
+                        </goals>
+                    </execution>
+                    <!-- 测试资源：如果不需要测试资源，配置跳过不存在的目录（消除提示） -->
+                    <execution>
+                        <id>default-testResources</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>testResources</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

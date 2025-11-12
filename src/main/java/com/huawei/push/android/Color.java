@@ -24,16 +24,16 @@ public class Color {
     private final float one = 1.000001f;
 
     @JSONField(name = "alpha")
-    private Float alpha = new Float(1.0);
+    private Float alpha = 1.0F;
 
     @JSONField(name = "red")
-    private Float red = new Float(0.0);
+    private Float red = 0.0F;
 
     @JSONField(name = "green")
-    private Float green = new Float(0.0);
+    private Float green = 0.0F;
 
     @JSONField(name = "blue")
-    private Float blue = new Float(0.0);
+    private Float blue = 0.0F;
 
     public Color(Builder builder) {
         this.alpha = builder.alpha;
@@ -73,10 +73,10 @@ public class Color {
     }
 
     public static class Builder {
-        private Float alpha = new Float(1.0);
-        private Float red = new Float(0.0);
-        private Float green = new Float(0.0);
-        private Float blue = new Float(0.0);
+        private Float alpha = 1.0F;
+        private Float red = 0.0F;
+        private Float green = 0.0F;
+        private Float blue = 0.0F;
 
         public Builder setAlpha(Float alpha) {
             this.alpha = alpha;
