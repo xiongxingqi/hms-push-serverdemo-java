@@ -38,23 +38,35 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 public class HuaweiMessageClientImpl implements HuaweiMessageClient {
-    private static final String PUSH_URL = ResourceBundle.getBundle("url").getString("push_open_url");
 
     private final String HcmPushUrl;
+    private final CloseableHttpClient httpClient;
     private String hcmTopicUrl;
     private String hcmGroupUrl;
     private String hcmTokenUrl;
-    private final CloseableHttpClient httpClient;
 
     private HuaweiMessageClientImpl(Builder builder) {
+        String PUSH_URL = builder.pushUrl;
         this.HcmPushUrl = MessageFormat.format(PUSH_URL + "/v1/{0}/messages:send", builder.appId);
         this.hcmTopicUrl = MessageFormat.format(PUSH_URL + "/v1/{0}/topic:{1}", builder.appId);
 
         ValidatorUtils.checkArgument(builder.httpClient != null, "requestFactory must not be null");
         this.httpClient = builder.httpClient;
+    }
+
+    static HuaweiMessageClientImpl fromApp(HuaweiApp app) {
+        String appId = ImplHuaweiTrampolines.getAppId(app);
+        return HuaweiMessageClientImpl.builder()
+                .setAppId(appId)
+                .setPushUrl(app.getOption().getCredential().getPushUrl())
+                .setHttpClient(app.getOption().getHttpClient())
+                .build();
+    }
+
+    static Builder builder() {
+        return new Builder();
     }
 
     /**
@@ -125,7 +137,7 @@ public class HuaweiMessageClientImpl implements HuaweiMessageClient {
     /**
      * send request
      *
-     * @param message     message {@link Message}
+     * @param message      message {@link Message}
      * @param validateOnly A boolean indicating whether to send message for test or not.
      * @param accessToken  A String for oauth
      * @return {@link SendResponse}
@@ -179,28 +191,23 @@ public class HuaweiMessageClientImpl implements HuaweiMessageClient {
         return new HuaweiMesssagingException(HuaweiMessaging.UNKNOWN_ERROR, msg, e);
     }
 
-    static HuaweiMessageClientImpl fromApp(HuaweiApp app) {
-        String appId = ImplHuaweiTrampolines.getAppId(app);
-        return HuaweiMessageClientImpl.builder()
-                .setAppId(appId)
-                .setHttpClient(app.getOption().getHttpClient())
-                .build();
-    }
-
-    static Builder builder() {
-        return new Builder();
-    }
-
     static final class Builder {
 
         private String appId;
         private CloseableHttpClient httpClient;
+
+        private String pushUrl;
 
         private Builder() {
         }
 
         public Builder setAppId(String appId) {
             this.appId = appId;
+            return this;
+        }
+
+        public Builder setPushUrl(String pushUrl) {
+            this.pushUrl = pushUrl;
             return this;
         }
 

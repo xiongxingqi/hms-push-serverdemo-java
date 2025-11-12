@@ -16,7 +16,6 @@
 package com.huawei.push.messaging;
 
 import com.alibaba.fastjson.JSONObject;
-
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -28,7 +27,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.ResourceBundle;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -39,7 +37,9 @@ import java.util.concurrent.locks.ReentrantLock;
 public class HuaweiCredential {
     private static final Logger logger = LoggerFactory.getLogger(HuaweiCredential.class);
 
-    private final String PUSH_AT_URL = ResourceBundle.getBundle("url").getString("token_server");
+    private String PUSH_AT_URL;
+
+    private String pushUrl;
 
     private String appId;
     private String appSecret;
@@ -53,11 +53,24 @@ public class HuaweiCredential {
         this.lock = new ReentrantLock();
         this.appId = builder.appId;
         this.appSecret = builder.appSecret;
+        this.PUSH_AT_URL = builder.pushAtUrl;
+        this.pushUrl = builder.pushUrl;
         if (builder.httpClient == null) {
             httpClient = HttpClients.createDefault();
         } else {
             this.httpClient = builder.httpClient;
         }
+    }
+
+    /**
+     * Builder for constructing {@link HuaweiCredential}.
+     */
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public String getPushUrl() {
+        return pushUrl;
     }
 
     /**
@@ -131,16 +144,11 @@ public class HuaweiCredential {
         return appId;
     }
 
-    /**
-     * Builder for constructing {@link HuaweiCredential}.
-     */
-    public static Builder builder() {
-        return new Builder();
-    }
-
     public static class Builder {
         private String appId;
         private String appSecret;
+        private String pushAtUrl;
+        private String pushUrl;
 
         private CloseableHttpClient httpClient;
 
@@ -154,6 +162,16 @@ public class HuaweiCredential {
 
         public Builder setAppSecret(String appSecret) {
             this.appSecret = appSecret;
+            return this;
+        }
+
+        public Builder setPushUtl(String pushUrl) {
+            this.pushUrl = pushUrl;
+            return this;
+        }
+
+        public Builder setPushAtUrl(String pushAtUrl) {
+            this.pushAtUrl = pushAtUrl;
             return this;
         }
 

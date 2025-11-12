@@ -24,6 +24,8 @@ import com.huawei.push.messaging.HuaweiMessaging;
 import com.huawei.push.reponse.SendResponse;
 import com.huawei.push.util.InitAppUtils;
 
+import java.util.ResourceBundle;
+
 public class SendInstanceAppMessage {
     /**
      * send instance app message
@@ -31,7 +33,13 @@ public class SendInstanceAppMessage {
      * @throws HuaweiMesssagingException
      */
     public void sendInstanceAppMessage() throws HuaweiMesssagingException {
-        HuaweiApp app = InitAppUtils.initializeApp();
+        ResourceBundle urlProperties = ResourceBundle.getBundle("url");
+        String appid = urlProperties.getString("appid");
+        String appsecret = urlProperties.getString("appsecret");
+        String tokenServer = urlProperties.getString("token_server");
+        String pushOpenUrl = urlProperties.getString("push_open_url");
+        HuaweiApp app = InitAppUtils.initializeApp(appid, appsecret, tokenServer, pushOpenUrl);
+
         HuaweiMessaging huaweiMessaging = HuaweiMessaging.getInstance(app);
 
         String token = "AI838_-IxzMqKqeIoIqFgL9D5N8YunVqZXFU3jCohcmEkb1RMquoT7uxQkv3cXCv7IXwXjTsH0WK35DRrnLI6RBOWxqjnRqkbp6W5CFQj0zw09FG5sTuyZd2NHtxgVzUUg";

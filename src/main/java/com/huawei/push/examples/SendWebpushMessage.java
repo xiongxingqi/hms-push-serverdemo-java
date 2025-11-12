@@ -28,10 +28,18 @@ import com.huawei.push.webpush.WebHmsOptions;
 import com.huawei.push.webpush.WebNotification;
 import com.huawei.push.webpush.WebpushHeaders;
 
+import java.util.ResourceBundle;
+
 public class SendWebpushMessage {
 
     public void sendWebpushMessage() throws HuaweiMesssagingException {
-        HuaweiApp app = InitAppUtils.initializeApp();
+        ResourceBundle urlProperties = ResourceBundle.getBundle("url");
+        String appid = urlProperties.getString("appid");
+        String appsecret = urlProperties.getString("appsecret");
+        String tokenServer = urlProperties.getString("token_server");
+        String pushOpenUrl = urlProperties.getString("push_open_url");
+        HuaweiApp app = InitAppUtils.initializeApp(appid, appsecret, tokenServer, pushOpenUrl);
+
         HuaweiMessaging huaweiMessaging = HuaweiMessaging.getInstance(app);
 
         Notification notification = Notification.builder().setTitle("Big News")

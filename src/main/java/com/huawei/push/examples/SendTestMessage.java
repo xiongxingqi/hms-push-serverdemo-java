@@ -16,26 +16,30 @@
 package com.huawei.push.examples;
 
 import com.alibaba.fastjson.JSONObject;
-import com.huawei.push.android.AndroidNotification;
-import com.huawei.push.android.BadgeNotification;
-import com.huawei.push.android.ClickAction;
-import com.huawei.push.android.Color;
-import com.huawei.push.android.LightSettings;
+import com.huawei.push.android.*;
 import com.huawei.push.exception.HuaweiMesssagingException;
 import com.huawei.push.message.AndroidConfig;
 import com.huawei.push.message.Message;
 import com.huawei.push.message.Notification;
 import com.huawei.push.messaging.HuaweiApp;
 import com.huawei.push.messaging.HuaweiMessaging;
-import com.huawei.push.model.Urgency;
 import com.huawei.push.model.Importance;
+import com.huawei.push.model.Urgency;
 import com.huawei.push.model.Visibility;
 import com.huawei.push.reponse.SendResponse;
 import com.huawei.push.util.InitAppUtils;
 
+import java.util.ResourceBundle;
+
 public class SendTestMessage {
     public void sendTestMessage() throws HuaweiMesssagingException {
-        HuaweiApp app = InitAppUtils.initializeApp();
+        ResourceBundle urlProperties = ResourceBundle.getBundle("url");
+        String appid = urlProperties.getString("appid");
+        String appsecret = urlProperties.getString("appsecret");
+        String tokenServer = urlProperties.getString("token_server");
+        String pushOpenUrl = urlProperties.getString("push_open_url");
+        HuaweiApp app = InitAppUtils.initializeApp(appid, appsecret, tokenServer, pushOpenUrl);
+
         HuaweiMessaging huaweiMessaging = HuaweiMessaging.getInstance(app);
 
         Notification notification = Notification.builder().setTitle("sample title")
@@ -44,9 +48,9 @@ public class SendTestMessage {
 
         JSONObject multiLangKey = new JSONObject();
         JSONObject titleKey = new JSONObject();
-        titleKey.put("en","好友请求");
+        titleKey.put("en", "好友请求");
         JSONObject bodyKey = new JSONObject();
-        bodyKey.put("en","My name is %s, I am from %s.");
+        bodyKey.put("en", "My name is %s, I am from %s.");
         multiLangKey.put("key1", titleKey);
         multiLangKey.put("key2", bodyKey);
 

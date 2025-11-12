@@ -27,6 +27,8 @@ import com.huawei.push.messaging.HuaweiMessaging;
 import com.huawei.push.reponse.SendResponse;
 import com.huawei.push.util.InitAppUtils;
 
+import java.util.ResourceBundle;
+
 public class SendApnsMessage {
     /**
      * send apns message
@@ -34,7 +36,13 @@ public class SendApnsMessage {
      * @throws HuaweiMesssagingException
      */
     public void sendApnsMessage() throws HuaweiMesssagingException {
-        HuaweiApp app = InitAppUtils.initializeApp();
+        ResourceBundle urlProperties = ResourceBundle.getBundle("url");
+        String appid = urlProperties.getString("appid");
+        String appsecret = urlProperties.getString("appsecret");
+        String tokenServer = urlProperties.getString("token_server");
+        String pushOpenUrl = urlProperties.getString("push_open_url");
+        HuaweiApp app = InitAppUtils.initializeApp(appid, appsecret, tokenServer, pushOpenUrl);
+
         HuaweiMessaging huaweiMessaging = HuaweiMessaging.getInstance(app);
 
         ApnsHeaders apnsHeaders = ApnsHeaders.builder().setApnsId("123e4567-e89b-12d3-a456-426655440000").build();

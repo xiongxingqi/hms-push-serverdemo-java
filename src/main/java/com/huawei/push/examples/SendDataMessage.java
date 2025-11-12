@@ -24,6 +24,8 @@ import com.huawei.push.model.Urgency;
 import com.huawei.push.reponse.SendResponse;
 import com.huawei.push.util.InitAppUtils;
 
+import java.util.ResourceBundle;
+
 public class SendDataMessage {
     /**
      * send data message
@@ -31,7 +33,13 @@ public class SendDataMessage {
      * @throws HuaweiMesssagingException
      */
     public void sendTransparent() throws HuaweiMesssagingException {
-        HuaweiApp app = InitAppUtils.initializeApp();
+        ResourceBundle urlProperties = ResourceBundle.getBundle("url");
+        String appid = urlProperties.getString("appid");
+        String appsecret = urlProperties.getString("appsecret");
+        String tokenServer = urlProperties.getString("token_server");
+        String pushOpenUrl = urlProperties.getString("push_open_url");
+        HuaweiApp app = InitAppUtils.initializeApp(appid, appsecret, tokenServer, pushOpenUrl);
+
         HuaweiMessaging huaweiMessaging = HuaweiMessaging.getInstance(app);
 
         AndroidConfig androidConfig = AndroidConfig.builder().setCollapseKey(-1)
